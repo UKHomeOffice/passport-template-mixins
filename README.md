@@ -51,4 +51,5 @@ checkbox
 checkbox-compound
 checkbox-required
 input-submit
+input-email
 ```

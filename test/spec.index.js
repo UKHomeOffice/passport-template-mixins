@@ -242,6 +242,98 @@ describe('Template Mixins', function () {
 
         });
 
+        describe('input-email', function () {
+
+            beforeEach(function () {
+                middleware = mixins(translate, {});
+            });
+
+            it('adds a function to res.locals', function () {
+                middleware(req, res, next);
+                res.locals['input-email'].should.be.a('function');
+            });
+
+            it('returns a function', function () {
+                middleware(req, res, next);
+                res.locals['input-email']().should.be.a('function');
+            });
+
+            it('looks up field label', function () {
+                middleware(req, res, next);
+                res.locals['input-email']().call(res.locals, 'field-name');
+                render.should.have.been.calledWith(sinon.match({
+                    label: 'fields.field-name.label'
+                }));
+            });
+
+            it('prefixes translation lookup with namespace if provided', function () {
+                middleware = mixins(translate, {}, { sharedTranslationsKey: 'name.space' });
+                middleware(req, res, next);
+                res.locals['input-email']().call(res.locals, 'field-name');
+                render.should.have.been.calledWith(sinon.match({
+                    label: 'name.space.fields.field-name.label'
+                }));
+            });
+
+            it('should have classes if one or more were specified against the field', function () {
+                middleware = mixins(translate, {
+                    'field-name': {
+                        'className': ['abc', 'def']
+                    }
+                });
+                middleware(req, res, next);
+                res.locals['input-email']().call(res.locals, 'field-name');
+                render.should.have.been.calledWith(sinon.match({
+                    className: 'abc def'
+                }));
+            });
+
+            it('has email type property', function () {
+                middleware(req, res, next);
+                res.locals['input-email']().call(res.locals, 'field-name');
+                render.should.have.been.calledWith(sinon.match({
+                    type: 'email'
+                }));
+            });
+
+            it('has a default pattern property', function () {
+                middleware(req, res, next);
+                res.locals['input-email']().call(res.locals, 'field-name');
+                render.should.have.been.calledWith(sinon.match({
+                    pattern: '/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/'
+                }));
+            });
+
+            it('uses pattern property set at a field level over default option', function () {
+                middleware = mixins(translate, {
+                    'field-name': {
+                        'validate': [
+                            { type: 'pattern', arguments: '/^[a-zA-Z0-9]$/' }
+                        ]
+                    }
+                });
+                middleware(req, res, next);
+                res.locals['input-email']().call(res.locals, 'field-name');
+                render.should.have.been.calledWith(sinon.match({
+                    pattern: '/^[a-zA-Z0-9]$/'
+                }));
+            });
+
+            it('uses locales translation property', function () {
+                middleware = mixins(sinon.stub().withArgs({'label': 'field-name.label'}).returns('Field name'), {
+                    'field-name': {
+                        'label': 'field-name.label'
+                    }
+                });
+                middleware(req, res, next);
+                res.locals['input-email']().call(res.locals, 'field-name');
+                render.should.have.been.calledWith(sinon.match({
+                    label: 'Field name'
+                }));
+            });
+
+        });
+
         describe('checkbox', function () {
 
             beforeEach(function () {
