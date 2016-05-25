@@ -79,6 +79,36 @@ input-submit
 textarea
 ```
 
+## Conditional translations
+
+Locales files support nested conditional translations in order to show different content in different scenarios. This is supported in the `{{#t}}` mixin, and labels, hints and legends used in field config.
+
+```json
+"fields": {
+    "field-name": {
+        "label": {
+            "dependent-field": {
+                "value-1": {
+                    "dependent-field-2": {
+                        "value-1": "Label 1",
+                        "value-2": "Label 2"
+                    }
+                },
+                "value-2": "Label 3"
+            },
+            "default": "Fallback label"
+        }
+    }
+}
+```
+
+Using the translation key `fields.field-name.label` will return different values in different situations depending on the values of named fields. In the above example the following are true:
+
+* If both `dependent-field` and `dependent-field-2` have the value `"value-1"`, the label returned will be `"Label 1"`.
+* If the value of `dependent-field` is `"value-1"` and the value of `dependent-field-2` is `"value-2"`, the label returned will be `"Label 2"`.
+* If the value of `dependent-field` is `"value-2"` the label returned will be `"Label 3"` regardless of the value of `dependent-field-2`
+* The default label `"Fallback label"` will be used if value of `dependent-field` is neither of the given options, or it is `undefined`. It will also be used if the value of `dependent-field` is `"value-1"` and the value of `dependent-field-2` is neither of the given options or it is undefined.
+
 ## Options
 
 - `className`: A string or array of string class names.

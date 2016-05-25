@@ -1105,6 +1105,87 @@ describe('Template Mixins', function () {
 
         });
 
+        describe('t', function () {
+            var locales, translate;
+
+            beforeEach(function () {
+                locales = {
+                    a: 'a shallow value',
+                    b: {
+                        c: {
+                            d: 'a deep value'
+                        }
+                    },
+                    'a-field': {
+                        label: {
+                            'dependent-field': {
+                                'first-value': 'Label to show if dependent-field is first-value',
+                                'second-value': 'Label to show if dependent-field is second-value'
+                            },
+                            'default': 'This is the default label'
+                        }
+                    },
+                    'another-field': {
+                        'header': {
+                            'dependent-field-1': {
+                                'correct-value': {
+                                    'dependent-field-2': {
+                                        'correct-value': 'This should be looked up'
+                                    }
+                                }
+                            },
+                            'default': 'This is another default label'
+                        }
+                    }
+                };
+
+                translate = function (key) {
+                    return key.split('.').reduce(function (ref, keyPart) {
+                        return ref[keyPart];
+                    }, locales) || key;
+                };
+
+                middleware = mixins(null, {
+                    translate: translate
+                });
+                req.form = {
+                    values: {}
+                };
+                middleware(req, res, next);
+            });
+
+            it('looks up a shallow locale', function () {
+                res.locals.t().call(res.locals, 'a').should.be.equal('a shallow value');
+            });
+
+            it('looks up a deep locale', function () {
+                res.locals.t().call(res.locals, 'b.c.d').should.be.equal('a deep value');
+            });
+
+            it('looks up the default value if a nested condition is not met', function () {
+                res.locals.t().call(res.locals, 'a-field.label').should.be.equal('This is the default label');
+            });
+
+            it('looks up the result of a-field.label.dependent-field.first-value if value of dependent-field is "first-value"', function () {
+                req.form.values['dependent-field'] = 'first-value';
+                var result = translate('a-field.label.dependent-field.first-value');
+                res.locals.t().call(res.locals, 'a-field.label').should.be.equal(result);
+            });
+
+            it('looks up the result of a-field.label.dependent-field.second-value if value of dependent-field is "second-value"', function () {
+                req.form.values['dependent-field'] = 'second-value';
+                var result = translate('a-field.label.dependent-field.second-value');
+                res.locals.t().call(res.locals, 'a-field.label').should.be.equal(result);
+            });
+
+            it('looks up nested conditions', function () {
+                req.form.values['dependent-field-1'] = 'correct-value';
+                req.form.values['dependent-field-2'] = 'correct-value';
+                var result = translate('another-field.header.dependent-field-1.correct-value.dependent-field-2.correct-value');
+                res.locals.t().call(res.locals, 'another-field.header').should.be.equal(result);
+            });
+        });
+
         describe('url', function () {
 
             beforeEach(function () {
