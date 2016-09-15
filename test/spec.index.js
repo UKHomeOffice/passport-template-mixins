@@ -851,6 +851,34 @@ describe('Template Mixins', function () {
                 }));
             });
 
+            it('looks up field label from fields.field-name.options.foo.label if not specified', function () {
+                middleware = mixins({
+                    'field-name': {
+                        options: ['foo', 'bar']
+                    }
+                });
+                middleware(req, res, next);
+                res.locals['radio-group']().call(res.locals, 'field-name');
+                render.args[0][0].options[0].label.should.be.equal('fields.field-name.options.foo.label');
+                render.args[0][0].options[1].label.should.be.equal('fields.field-name.options.bar.label');
+            });
+
+            it('looks up field label from fields.field-name.options.foo.label if not specified (object options)', function () {
+                middleware = mixins({
+                    'field-name': {
+                        options: [{
+                            value: 'foo'
+                        }, {
+                            value: 'bar'
+                        }]
+                    }
+                });
+                middleware(req, res, next);
+                res.locals['radio-group']().call(res.locals, 'field-name');
+                render.args[0][0].options[0].label.should.be.equal('fields.field-name.options.foo.label');
+                render.args[0][0].options[1].label.should.be.equal('fields.field-name.options.bar.label');
+            });
+
             it('should have classes if one or more were specified against the field', function () {
                 middleware = mixins({
                     'field-name': {
