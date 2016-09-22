@@ -1,4 +1,4 @@
-<div id="{{id}}-group" class="form-group{{#compound}} form-group-compound{{/compound}}{{#error}} error{{/error}}">
+<div id="{{id}}-group" class="form-group{{#compound}} form-group-compound{{/compound}}{{#error}} validation-error{{/error}}">
     <label for="{{id}}" class="{{labelClassName}}">
         {{{label}}}
         {{#hint}}<span {{$hintId}}id="{{hintId}}" {{/hintId}}class="form-hint">{{hint}}</span>{{/hint}}
@@ -7,7 +7,7 @@
     <textarea
         name="{{id}}"
         id="{{id}}"
-        class="form-control{{#className}} {{className}}{{/className}}"
+        class="form-control{{#className}} {{className}}{{/className}}{{#error}} invalid-input{{/error}}"
         aria-required="{{required}}"
         {{#maxlength}} maxlength="{{maxlength}}"{{/maxlength}}
         {{#attributes}}
