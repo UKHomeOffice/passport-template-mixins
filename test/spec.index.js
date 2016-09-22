@@ -1086,6 +1086,73 @@ describe('Template Mixins', function () {
                 }));
             });
 
+            describe('multiple options selected', function () {
+                beforeEach(function () {
+                    middleware = mixins({
+                        'field-name': {
+                            options: [{
+                                label: 'Foo',
+                                value: 'foo'
+                            }, {
+                                label: 'Bar',
+                                value: 'bar'
+                            }, {
+                                label: 'Baz',
+                                value: 'baz'
+                            }]
+                        }
+                    });
+                });
+
+                it('marks foo and bar as selected', function () {
+                    res.locals.values = {
+                        'field-name': ['foo', 'bar']
+                    };
+                    middleware(req, res, next);
+                    res.locals['checkbox-group']().call(res.locals, 'field-name');
+                    var options = render.args[0][0].options;
+                    _.pluck(options.filter(function (option) {
+                        return option.selected;
+                    }), 'value').should.be.eql(['foo', 'bar']);
+                });
+
+                it('marks foo, bar and baz as selected', function () {
+                    res.locals.values = {
+                        'field-name': ['foo', 'bar', 'baz']
+                    };
+                    middleware(req, res, next);
+                    res.locals['checkbox-group']().call(res.locals, 'field-name');
+                    var options = render.args[0][0].options;
+                    _.pluck(options.filter(function (option) {
+                        return option.selected;
+                    }), 'value').should.be.eql(['foo', 'bar', 'baz']);
+                });
+
+                it('marks foo and baz as selected', function () {
+                    res.locals.values = {
+                        'field-name': ['foo', 'baz']
+                    };
+                    middleware(req, res, next);
+                    res.locals['checkbox-group']().call(res.locals, 'field-name');
+                    var options = render.args[0][0].options;
+                    _.pluck(options.filter(function (option) {
+                        return option.selected;
+                    }), 'value').should.be.eql(['foo', 'baz']);
+                });
+
+                it('marks bar as selected', function () {
+                    res.locals.values = {
+                        'field-name': ['bar']
+                    };
+                    middleware(req, res, next);
+                    res.locals['checkbox-group']().call(res.locals, 'field-name');
+                    var options = render.args[0][0].options;
+                    _.pluck(options.filter(function (option) {
+                        return option.selected;
+                    }), 'value').should.be.eql(['bar']);
+                });
+            });
+
         });
 
         describe('select', function () {

@@ -75,6 +75,7 @@ radio-group
 checkbox
 checkbox-compound
 checkbox-required
+checkbox-group
 input-submit
 textarea
 ```
