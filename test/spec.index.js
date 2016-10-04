@@ -850,7 +850,7 @@ describe('Template Mixins', function () {
                 }));
             });
 
-            it('looks up field label from fields.field-name.options.foo.label if not specified', function () {
+            it('looks up field label from translations when the option is defined as a string', function () {
                 middleware = mixins({
                     'field-name': {
                         options: ['foo', 'bar']
@@ -862,7 +862,7 @@ describe('Template Mixins', function () {
                 render.args[0][0].options[1].label.should.be.equal('fields.field-name.options.bar.label');
             });
 
-            it('looks up field label from fields.field-name.options.foo.label if not specified (object options)', function () {
+            it('looks up field label from translations when the option is defined as an object', function () {
                 middleware = mixins({
                     'field-name': {
                         options: [{
