@@ -1,4 +1,4 @@
-<div id="{{id}}-group" class="form-group{{#compound}} form-group-compound{{/compound}}{{^date}}{{#error}} error{{/error}}{{/date}}">
+<div id="{{id}}-group" class="form-group{{#compound}} form-group-compound{{/compound}}{{^date}}{{#error}} error{{/error}}{{/date}} " {{#groupAttributes}}{{attribute}}="{{value}}"{{/groupAttributes}}>
     <label for="{{id}}" class="{{labelClassName}}">
         {{{label}}}
         {{#hint}}<span {{$hintId}}id="{{hintId}}" {{/hintId}}class="form-hint">{{hint}}</span>{{/hint}}
