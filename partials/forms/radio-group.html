@@ -1,4 +1,4 @@
-<div id="{{key}}-group" class="form-group{{#className}} {{className}} {{/className}}{{#error}} error{{/error}}">
+<div id="{{key}}-group" class="form-group{{#className}} {{className}} {{/className}}{{#error}} error{{/error}}" {{#groupAttributes}}{{attribute}}="{{value}}"{{/groupAttributes}}>
     <fieldset role="radiogroup" aria-required="true">
         <legend>
             <span{{#legendClassName}} class="{{legendClassName}}"{{/legendClassName}}>{{legend}}</span>
@@ -17,6 +17,9 @@
                     {{#selected}} checked="checked"{{/selected}}
                     {{^error}}{{#hint}} aria-describedby="{{key}}-hint"{{/hint}}{{/error}}
                     {{#error}} aria-describedby="{{key}}-error" aria-invalid="true"{{/error}}
+                    {{#attributes}}
+                        {{attribute}}="{{value}}"
+                    {{/attributes}}
                 >
                 {{{label}}}
             </label>

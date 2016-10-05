@@ -1,4 +1,4 @@
-<div id="{{id}}-group" class="form-group{{#compound}} form-group-compound{{/compound}}{{#error}} error{{/error}}">
+<div id="{{id}}-group" class="form-group{{#compound}} form-group-compound{{/compound}}{{#error}} error{{/error}} " {{#groupAttributes}}{{attribute}}="{{value}}"{{/groupAttributes}}>
     <label for="{{id}}" class="{{labelClassName}}">
         {{{label}}}
         {{#hint}}<span {{$hintId}}id="{{hintId}}" {{/hintId}}class="form-hint">{{hint}}</span>{{/hint}}
@@ -6,7 +6,13 @@
     </label>
     <select id="{{id}}" class="{{#className}}{{className}}{{/className}}" name="{{id}}" aria-required="{{required}}">
     {{#options}}
-        <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+        <option value="{{value}}"
+        {{#selected}}selected{{/selected}}>
+        {{label}}
+        {{#attributes}}
+            {{attribute}}="{{value}}"
+        {{/attributes}}
+        </option>
     {{/options}}
     </select>
 </div>
