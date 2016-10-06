@@ -347,13 +347,13 @@ describe('Template Mixins', function () {
                 res.locals['input-date']().should.be.a('function');
             });
 
-            it('renders 6 times if the field is not marked as inexact', function () {
+            it('renders 7 times if the field is not marked as inexact', function () {
                 middleware(req, res, next);
                 res.locals['input-date']().call(res.locals, 'field-name');
-                render.callCount.should.be.equal(6);
+                render.callCount.should.be.equal(7);
             });
 
-            it('renders 4 times if the field is marked as inexact', function () {
+            it('renders 5 times if the field is marked as inexact', function () {
                 var middlewareWithFieldNameMarkedAsInexact = mixins({
                     'field-name': {
                         'inexact': true
@@ -361,7 +361,7 @@ describe('Template Mixins', function () {
                 });
                 middlewareWithFieldNameMarkedAsInexact(req, res, next);
                 res.locals['input-date']().call(res.locals, 'field-name');
-                render.callCount.should.be.equal(4);
+                render.callCount.should.be.equal(5);
             });
 
             it('looks up field label', function () {
@@ -370,9 +370,9 @@ describe('Template Mixins', function () {
 
                 render.called;
 
-                var dayCall = render.getCall(1),
-                    monthCall = render.getCall(3),
-                    yearCall = render.getCall(5);
+                var dayCall = render.getCall(2),
+                    monthCall = render.getCall(4),
+                    yearCall = render.getCall(6);
 
                 dayCall.should.have.been.calledWith(sinon.match({
                     label: 'fields.field-name-day.label'
@@ -400,9 +400,9 @@ describe('Template Mixins', function () {
 
                     render.called;
 
-                    var dayCall = render.getCall(1),
-                        monthCall = render.getCall(3),
-                        yearCall = render.getCall(5);
+                    var dayCall = render.getCall(2),
+                        monthCall = render.getCall(4),
+                        yearCall = render.getCall(6);
 
                     dayCall.should.have.been.calledWith(sinon.match({
                         autocomplete: 'bday-day'
@@ -432,9 +432,9 @@ describe('Template Mixins', function () {
 
                     render.called;
 
-                    var dayCall = render.getCall(1),
-                        monthCall = render.getCall(3),
-                        yearCall = render.getCall(5);
+                    var dayCall = render.getCall(2),
+                        monthCall = render.getCall(4),
+                        yearCall = render.getCall(6);
 
                     dayCall.should.have.been.calledWith(sinon.match({
                         autocomplete: 'day-type'
@@ -460,9 +460,9 @@ describe('Template Mixins', function () {
 
                     render.called;
 
-                    var dayCall = render.getCall(1),
-                        monthCall = render.getCall(3),
-                        yearCall = render.getCall(5);
+                    var dayCall = render.getCall(2),
+                        monthCall = render.getCall(4),
+                        yearCall = render.getCall(6);
 
                     dayCall.should.have.been.calledWith(sinon.match({
                         autocomplete: 'off'
@@ -508,9 +508,9 @@ describe('Template Mixins', function () {
 
                 render.called;
 
-                var dayCall = render.getCall(1),
-                    monthCall = render.getCall(3),
-                    yearCall = render.getCall(5);
+                var dayCall = render.getCall(2),
+                    monthCall = render.getCall(4),
+                    yearCall = render.getCall(6);
 
                 dayCall.should.have.been.calledWith(sinon.match({
                     label: 'name.space.fields.field-name-day.label'
@@ -529,13 +529,13 @@ describe('Template Mixins', function () {
                 middleware(req, res, next);
                 res.locals['input-date']().call(res.locals, 'field-name');
 
-                render.getCall(1).should.have.been.calledWithExactly(sinon.match({
+                render.getCall(2).should.have.been.calledWithExactly(sinon.match({
                     date: true
                 }));
-                render.getCall(3).should.have.been.calledWithExactly(sinon.match({
+                render.getCall(4).should.have.been.calledWithExactly(sinon.match({
                     date: true
                 }));
-                render.getCall(5).should.have.been.calledWithExactly(sinon.match({
+                render.getCall(6).should.have.been.calledWithExactly(sinon.match({
                     date: true
                 }));
             });
@@ -841,7 +841,7 @@ describe('Template Mixins', function () {
                 });
                 middleware(req, res, next);
                 res.locals['radio-group']().call(res.locals, 'field-name');
-                render.thirdCall.should.have.been.calledWith(sinon.match(function (value) {
+                render.lastCall.should.have.been.calledWith(sinon.match(function (value) {
                     var obj = value.options[0];
                     return _.isMatch(obj, {
                         label: 'Foo',
@@ -861,8 +861,8 @@ describe('Template Mixins', function () {
                 });
                 middleware(req, res, next);
                 res.locals['radio-group']().call(res.locals, 'field-name');
-                render.args[3][0].options[0].label.should.be.equal('fields.field-name.options.foo.label');
-                render.args[3][0].options[1].label.should.be.equal('fields.field-name.options.bar.label');
+                render.lastCall.args[0].options[0].label.should.be.equal('fields.field-name.options.foo.label');
+                render.lastCall.args[0].options[1].label.should.be.equal('fields.field-name.options.bar.label');
             });
 
             it('looks up field label from fields.field-name.options.foo.label if not specified (object options)', function () {
@@ -877,8 +877,8 @@ describe('Template Mixins', function () {
                 });
                 middleware(req, res, next);
                 res.locals['radio-group']().call(res.locals, 'field-name');
-                render.args[3][0].options[0].label.should.be.equal('fields.field-name.options.foo.label');
-                render.args[3][0].options[1].label.should.be.equal('fields.field-name.options.bar.label');
+                render.lastCall.args[0].options[0].label.should.be.equal('fields.field-name.options.foo.label');
+                render.lastCall.args[0].options[1].label.should.be.equal('fields.field-name.options.bar.label');
             });
 
             it('should have classes if one or more were specified against the field', function () {
@@ -1140,7 +1140,7 @@ describe('Template Mixins', function () {
                     };
                     middleware(req, res, next);
                     res.locals['checkbox-group']().call(res.locals, 'field-name');
-                    var options = render.args[4][0].options;
+                    var options = render.lastCall.args[0].options;
                     _.pluck(options.filter(function (option) {
                         return option.selected;
                     }), 'value').should.be.eql(['foo', 'bar']);
@@ -1152,7 +1152,7 @@ describe('Template Mixins', function () {
                     };
                     middleware(req, res, next);
                     res.locals['checkbox-group']().call(res.locals, 'field-name');
-                    var options = render.args[4][0].options;
+                    var options = render.lastCall.args[0].options;
                     _.pluck(options.filter(function (option) {
                         return option.selected;
                     }), 'value').should.be.eql(['foo', 'bar', 'baz']);
@@ -1164,7 +1164,7 @@ describe('Template Mixins', function () {
                     };
                     middleware(req, res, next);
                     res.locals['checkbox-group']().call(res.locals, 'field-name');
-                    var options = render.args[4][0].options;
+                    var options = render.lastCall.args[0].options;
                     _.pluck(options.filter(function (option) {
                         return option.selected;
                     }), 'value').should.be.eql(['foo', 'baz']);
@@ -1176,7 +1176,7 @@ describe('Template Mixins', function () {
                     };
                     middleware(req, res, next);
                     res.locals['checkbox-group']().call(res.locals, 'field-name');
-                    var options = render.args[4][0].options;
+                    var options = render.lastCall.args[0].options;
                     _.pluck(options.filter(function (option) {
                         return option.selected;
                     }), 'value').should.be.eql(['bar']);
@@ -1290,7 +1290,7 @@ describe('Template Mixins', function () {
                 }, { translate: translate });
                 middleware(req, res, next);
                 res.locals['select']().call(res.locals, 'field-name');
-                render.should.have.been.calledWith(sinon.match(function (value) {
+                render.lastCall.should.have.been.calledWith(sinon.match(function (value) {
                     var obj = value.options[0];
                     return _.isMatch(obj, {
                         label: '',
