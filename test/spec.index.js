@@ -1306,6 +1306,15 @@ describe('Template Mixins', function () {
 
     describe('without stubbed Hogan', function () {
 
+        it('looks up variables within the field key', function () {
+            res.locals.foo= 'bar'
+            middleware = mixins({
+                'bar-field-name': {}
+            });
+            middleware(req, res, next);
+            res.locals['input-text']().call(res.locals, '{{foo}}-field-name').should.contain('id="bar-field-name"');
+        });
+
         describe('date', function () {
 
             beforeEach(function () {
