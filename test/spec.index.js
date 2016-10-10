@@ -1307,7 +1307,7 @@ describe('Template Mixins', function () {
     describe('without stubbed Hogan', function () {
 
         it('looks up variables within the field key', function () {
-            res.locals.foo= 'bar'
+            res.locals.foo= 'bar';
             middleware = mixins({
                 'bar-field-name': {}
             });
