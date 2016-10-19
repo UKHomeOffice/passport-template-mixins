@@ -4,6 +4,7 @@
         {{#hint}}<span {{$hintId}}id="{{hintId}}" {{/hintId}}class="form-hint">{{hint}}</span>{{/hint}}
         {{^date}}{{#error}}<span class="error-message">{{error.message}}</span>{{/error}}{{/date}}
     </label>
+    {{#renderChild}}{{/renderChild}}
     <input
         type="{{type}}"
         name="{{id}}"

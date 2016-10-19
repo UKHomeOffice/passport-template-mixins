@@ -1,3 +1,4 @@
+var path = require('path');
 var mixins = require('../lib/template-mixins');
 var _ = require('underscore');
 var Hogan = require('hogan.js');
@@ -77,6 +78,19 @@ describe('Template Mixins', function () {
                 res.locals['input-text']().call(res.locals, 'field-name');
                 render.should.have.been.calledWith(sinon.match({
                     label: 'fields.field-name.label'
+                }));
+            });
+
+            it('passes child from field config', function () {
+                middleware = mixins({
+                    'field-name': {
+                        child: 'a child'
+                    }
+                });
+                middleware(req, res, next);
+                res.locals['input-text']().call(res.locals, 'field-name');
+                render.should.have.been.calledWith(sinon.match({
+                    child: 'a child'
                 }));
             });
 
@@ -1626,6 +1640,22 @@ describe('Template Mixins', function () {
                         key: 'value'
                     };
                     renderChild.call(fields['field-name'].options[0]).should.be.equal('<div>value</div>');
+                    sinon.stub(Hogan, 'compile').returns({
+                        render: render
+                    });
+                });
+
+                it('can lookup partial templates', function () {
+                    Hogan.compile.restore();
+                    var partialPath = path.resolve(__dirname, './test-partial.html').replace('.html', '');
+                    res.locals.partials = {
+                        'partials-test-partial': partialPath
+                    };
+                    options[0] = {
+                        child: '{{< partials-test-partial}}{{$title}}Title{{/title}}{{$content}}The content{{/content}}{{/partials-test-partial}}',
+                        key: 'value'
+                    };
+                    renderChild.call(fields['field-name'].options[0]).should.be.equal('<h1>Title</h1>\n<p>The content</p>\n');
                     sinon.stub(Hogan, 'compile').returns({
                         render: render
                     });
