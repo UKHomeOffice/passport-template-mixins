@@ -88,9 +88,61 @@ textarea
 - `hint`: This adds context to the label, which it is a part of, for input text, radio groups and textarea. It is used within the input by aria-describedby for screen readers.
 - `maxlength`: Applicable to text-based fields and mapped to the `maxlength` HTML attribute.
 - `options`: Applicable to HTML `select` and `radio` controls and used to generate the items of either HTML element.
+  Here is an example of it being used on radio buttons asking if someone's passport has changed:
+  ```
+  'use strict';
+
+  module.exports = {
+    'passportChanged': {
+      validate: ['required'],
+      className: ['inline', 'form-group'],
+      legend: {
+        className: ['visuallyhidden']
+      },
+      options: [{
+        value: 'Yes',
+        label: 'Yes'
+      }, {
+        value: 'No',
+        label: 'No'
+      }]
+    }
+  };
+  ```
 - `selected`: Applicable to `select`, `checkbox`, and `radio` controls. Will render the selected HTML option/element selected or checked.
 - `legend`: Applicable to `radio` button controls, which are wrapped in a HTML `fieldset` with a `legend` element.
 - `legendClassName`: Applied as a class name to HTML `legend` attribute.
+- `labelClassName`: Applicable to mixins with a `label` attribute where you can set its CSS class.
+- `validate`: Applicate to nearly all mixins requiring user input to check whether a selection has been made and, if
+this fails, what validation should be displayed on the page.
 - `toggle`: Can be used to toggle the display of the HTML element with a matching `id`. See [passports-frontend-toolkit](https://github.com/UKHomeOffice/passports-frontend-toolkit/blob/master/assets/javascript/progressive-reveal.js) for details.
-- `attributes`: A hash of key/value pairs applicable to a HTML `textarea` field. Each key/value is assigned as an attribute of the `textarea`. For example `spellcheck="true"`.
+- `attributes`: A hash of key/value pairs applicable to a HTML `textarea` field. Each key/value is assigned as an attribute of the `textarea`. For example `spellcheck="true"`. It can also be applied to other fields such as `input-text` for instance. It can be applied in your `/apps/<app name>/fields` folder in the relevant file like so:
+  ```
+  'use strict';
+
+  module.exports = {
+    <field name>: {
+      attributes: [{
+        attribute: <key>,
+        value: <value>
+      }]
+    },
+  }
+  ```
+  Here is an example where an `input-text` field is being
+  prepopulated with an example email e.g. `value="example@hotmail.com"`:
+  ```
+  'use strict';
+
+  module.exports = {
+    'emailAddress': {
+      validate: ['required', 'email'],
+      attributes: [{
+        attribute: 'value',
+        value: 'example@hotmail.com'
+      }]
+    }
+  };
+  ```
+
 - `child`: Render a child partial beneath each option in an `optionGroup`. Accepts a custom mustache template string, a custom partial in the format `partials/{your-partial-name}` or a template mixin key which will be rendered within a panel element partial.
