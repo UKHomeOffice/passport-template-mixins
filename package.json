@@ -4,7 +4,7 @@
   "description": "A middleware that exposes a series of Mustache mixins on res.locals to ease usage of forms, translations, and some general needs.",
   "main": "index.js",
   "scripts": {
-    "test": "npm run lint && npm run unit && npm run cover && npm run snyk",
+    "test": "npm run lint && npm run unit && npm run cover",
     "lint": "eslint .",
     "unit": "mocha test/ --require ./test/helpers --recursive",
     "cover": "istanbul cover _mocha -- -R dot test/ --recursive --require test/helpers",
@@ -46,6 +46,6 @@
     "mocha": "^2.4.5",
     "sinon": "^1.17.4",
     "sinon-chai": "^2.8.0",
-    "snyk": "1.23.4"
+    "snyk": "^1.24.5"
   }
 }
