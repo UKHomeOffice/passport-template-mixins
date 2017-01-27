@@ -27,6 +27,9 @@
   ],
   "author": "Seb Insua",
   "license": "MIT",
+  "engines": {
+    "node": ">=4"
+  },
   "bugs": {
     "url": "https://github.com/UKHomeOffice/passports-template-mixins/issues"
   },
