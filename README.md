@@ -1,7 +1,7 @@
 # passports-template-mixins
 A middleware that exposes a series of Mustache mixins on `res.locals` to ease usage of forms, translations, and some other things.
 
-It takes in two arguments, a `fields` object containing field configuration, and an [options object](#options).
+It takes an optional [options object](#options) argument.
 
 ## Installation
 
@@ -13,16 +13,14 @@ npm install [--save] hmpo-template-mixins;
 
 ```javascript
 var express = require('express');
-
 var i18n = require('i18n-future');
-
-var fields = require('./routes/renew-your-passport/fields');
+var mixins = require('hmpo-template-mixins');
 
 app.set('view engine', 'html');
 app.set('views', path.join(__dirname, '/views'));
 
 app.use(i18n.middleware());
-app.use(require('hmpo-template-mixins')(fields, { sharedTranslationsKey: 'passport.renew' }));
+app.use(mixins({ sharedTranslationsKey: 'passport.renew' }));
 
 app.use(function (req, res) {
     // NOTE: res.locals.partials has been set.
@@ -30,6 +28,10 @@ app.use(function (req, res) {
     res.render('example-template');
 });
 ```
+
+If rendering as part of an HMPO controller's middleware chain then the field configuration will automatically be set to `res.locals.options.fields` by the controller, and will be loaded from here by the mixins.
+
+Alternatively, if not using HMPO controllers, you can explicitly set field configuration with instantiating the middleware by passing a `fields` option. This should not be used for dynamic field configuration.
 
 ## Translation
 
@@ -47,11 +49,15 @@ Allows you to alter the file extension of the templates - Default: 'html'
 
 ### sharedTranslationsKey
 
-Prefixes keys for translation - Default: ''
+Prefixes keys for translation - Default: '' (empty string)
 
 ### translate
 
 Defines a custom translation method - Default: `req.translate`
+
+### fields
+
+Static field configuration - Default: `{}`
 
 ## Mustache mixins available
 
@@ -79,7 +85,7 @@ input-submit
 textarea
 ```
 
-## Options
+## Field options
 
 - `className`: A string or array of string class names.
 - `label`: The intended value of the HTML `label` attribute.
