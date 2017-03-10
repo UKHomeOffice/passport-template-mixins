@@ -1040,6 +1040,7 @@ describe('Template Mixins', function () {
                     return _.isMatch(obj, {
                         label: 'Foo',
                         value: 'foo',
+                        type: 'radio',
                         selected: false,
                         toggle: undefined
                     });
@@ -1084,6 +1085,18 @@ describe('Template Mixins', function () {
                 res.locals['radio-group']().call(res.locals, 'field-name');
                 render.should.have.been.calledWith(sinon.match({
                     className: 'abc def'
+                }));
+            });
+
+            it('should have role: radiogroup', function () {
+                res.locals.options.fields = {
+                    'field-name': {
+                    }
+                };
+                middleware(req, res, next);
+                res.locals['radio-group']().call(res.locals, 'field-name');
+                render.should.have.been.calledWith(sinon.match({
+                    role: 'radiogroup'
                 }));
             });
 
@@ -1218,6 +1231,213 @@ describe('Template Mixins', function () {
                 render.should.have.been.calledWithExactly(sinon.match({
                     className: 'abc'
                 }));
+            });
+
+        });
+
+        describe('checkbox-group', function () {
+
+            beforeEach(function () {
+                middleware = mixins({ translate: translate });
+            });
+
+            it('adds a function to res.locals', function () {
+                middleware(req, res, next);
+                res.locals['checkbox-group'].should.be.a('function');
+            });
+
+            it('returns a function', function () {
+                middleware(req, res, next);
+                res.locals['checkbox-group']().should.be.a('function');
+            });
+
+            it('looks up field options', function () {
+                res.locals.options.fields = {
+                    'field-name': {
+                        options: [{
+                            label: 'Foo',
+                            value: 'foo'
+                        }, {
+                            label: 'Bar',
+                            value: 'bar'
+                        }, {
+                            label: 'Baz',
+                            value: 'baz'
+                        }]
+                    }
+                };
+                middleware(req, res, next);
+                res.locals['checkbox-group']().call(res.locals, 'field-name');
+                render.should.have.been.calledWith(sinon.match(function (value) {
+                    var options = [{
+                        label: 'Foo',
+                        value: 'foo',
+                        type: 'checkbox',
+                        selected: false,
+                        toggle: undefined
+                    }, {
+                        label: 'Bar',
+                        value: 'bar',
+                        type: 'checkbox',
+                        selected: false,
+                        toggle: undefined
+                    }, {
+                        label: 'Baz',
+                        value: 'baz',
+                        type: 'checkbox',
+                        selected: false,
+                        toggle: undefined
+                    }];
+                    return _.every(value.options, function (option, index) {
+                        return _.isMatch(option, options[index]);
+                    });
+                }));
+            });
+
+            it('should have classes if one or more were specified against the field', function () {
+                res.locals.options.fields = {
+                    'field-name': {
+                        'className': ['abc', 'def']
+                    }
+                };
+                middleware(req, res, next);
+                res.locals['checkbox-group']().call(res.locals, 'field-name');
+                render.should.have.been.calledWith(sinon.match({
+                    className: 'abc def'
+                }));
+            });
+
+            it('should have role: group', function () {
+                res.locals.options.fieds = {
+                    'field-name': {
+                    }
+                };
+                middleware(req, res, next);
+                res.locals['checkbox-group']().call(res.locals, 'field-name');
+                render.should.have.been.calledWith(sinon.match({
+                    role: 'group'
+                }));
+            });
+
+            it('adds `legendClassName` if it exists as a string or an array', function () {
+                res.locals.options.fields = {
+                    'field-name-1': {
+                        legend: {
+                            className: 'abc def'
+                        }
+                    },
+                    'field-name-2': {
+                        legend: {
+                            className: ['abc', 'def']
+                        }
+                    }
+                };
+
+                middleware(req, res, next);
+
+                res.locals['checkbox-group']().call(res.locals, 'field-name-1');
+                render.should.have.been.calledWith(sinon.match({
+                    legendClassName: 'abc def'
+                }));
+
+                res.locals['checkbox-group']().call(res.locals, 'field-name-2');
+                render.should.have.been.calledWith(sinon.match({
+                    legendClassName: 'abc def'
+                }));
+            });
+
+            it('uses locales translation for legend if a field value isn\'t provided', function () {
+                var translate = sinon.stub().withArgs('fields.field-name.legend').returns('Field legend');
+                middleware = mixins({ translate: translate });
+                res.locals.options.fields = {
+                    'field-name': {}
+                };
+                middleware(req, res, next);
+                res.locals['checkbox-group']().call(res.locals, 'field-name');
+                render.should.have.been.calledWithExactly(sinon.match({
+                    legend: 'Field legend'
+                }));
+            });
+
+            it('uses locales translation for hint if a field value isn\'t provided', function () {
+                var translate = sinon.stub().withArgs('fields.field-name.hint').returns('Field hint');
+                middleware = mixins({ translate: translate });
+                res.locals.options.fields = {
+                    'field-name': {}
+                };
+                middleware(req, res, next);
+                res.locals['checkbox-group']().call(res.locals, 'field-name');
+                render.should.have.been.calledWithExactly(sinon.match({
+                    hint: 'Field hint'
+                }));
+            });
+
+            it('doesn\'t add a hint if the hint doesn\'t exist in locales', function () {
+                res.locals.options.fields = {
+                    'field-name': {}
+                };
+                middleware(req, res, next);
+                res.locals['checkbox-group']().call(res.locals, 'field-name');
+                render.should.have.been.calledWithExactly(sinon.match({
+                    hint: null
+                }));
+            });
+
+            describe('previously selected options', function () {
+
+                beforeEach(function () {
+                    res.locals.options.fields = {
+                        'field-name': {
+                            options: [{
+                                label: 'Foo',
+                                value: 'foo'
+                            }, {
+                                label: 'Bar',
+                                value: 'bar'
+                            }, {
+                                label: 'Baz',
+                                value: 'baz'
+                            }]
+                        }
+                    };
+                });
+
+                it('sets previously selected group option to true', function () {
+                    res.locals.values = {
+                        'field-name': ['foo']
+                    };
+                    middleware(req, res, next);
+                    res.locals['checkbox-group']().call(res.locals, 'field-name');
+                    var options = render.args[0][0].options;
+                    _.pluck(options.filter(function (option) {
+                        return option.selected;
+                    }), 'value').should.be.eql(['foo']);
+                });
+
+                it('sets previously selected group option as string to true', function () {
+                    res.locals.values = {
+                        'field-name': 'bar'
+                    };
+                    middleware(req, res, next);
+                    res.locals['checkbox-group']().call(res.locals, 'field-name');
+                    var options = render.args[0][0].options;
+                    _.pluck(options.filter(function (option) {
+                        return option.selected;
+                    }), 'value').should.be.eql(['bar']);
+                });
+
+                it('sets previously selected group options to true', function () {
+                    res.locals.values = {
+                        'field-name': ['baz', 'foo']
+                    };
+                    middleware(req, res, next);
+                    res.locals['checkbox-group']().call(res.locals, 'field-name');
+                    var options = render.args[0][0].options;
+                    _.pluck(options.filter(function (option) {
+                        return option.selected;
+                    }), 'value').should.be.eql(['foo', 'baz']);
+                });
+
             });
 
         });
