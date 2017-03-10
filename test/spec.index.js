@@ -70,20 +70,22 @@ describe('Template Mixins', function () {
             });
 
             it('merges static field options with other options', function () {
+                var translate = sinon.stub();
                 middleware = proxiedMixins({
                     'field-name': {
                         validate: 'required'
                     }
                 }, {
-                    sharedTranslationsKey: 'custom'
+                    sharedTranslationsKey: 'custom',
+                    translate: translate
                 });
                 middleware(req, res, next);
                 res.locals['input-text']().call(res.locals, 'field-name');
                 render.should.have.been.called;
                 render.should.have.been.calledWithExactly(sinon.match({
-                    required: true,
-                    label: 'custom.fields.field-name.label'
+                    required: true
                 }));
+                translate.should.have.been.calledWithExactly('custom.fields.field-name.label');
             });
 
         });
@@ -122,8 +124,10 @@ describe('Template Mixins', function () {
 
         beforeEach(function () {
             render = sinon.stub();
-            sinon.stub(Hogan, 'compile').returns({
-                render: render
+            sinon.stub(Hogan, 'compile', function (text) {
+                return {
+                    render: render.returns(text)
+                };
             });
             middleware = mixins();
         });
@@ -286,7 +290,7 @@ describe('Template Mixins', function () {
                 middleware(req, res, next);
                 res.locals['input-text']().call(res.locals, 'field-name');
                 render.should.have.been.calledWith(sinon.match({
-                    hint: null
+                    hint: ''
                 }));
             });
 
@@ -436,13 +440,13 @@ describe('Template Mixins', function () {
                 res.locals['input-date']().should.be.a('function');
             });
 
-            it('renders thrice if the field is not marked as inexact', function () {
+            it('renders 9 times if the field is not marked as inexact', function () {
                 middleware(req, res, next);
                 res.locals['input-date']().call(res.locals, 'field-name');
-                render.should.have.been.calledThrice;
+                render.callCount.should.be.equal(9);
             });
 
-            it('renders twice if the field is marked as inexact', function () {
+            it('renders 6 times if the field is marked as inexact', function () {
                 res.locals.options.fields = {
                     'field-name': {
                         inexact: true
@@ -450,7 +454,7 @@ describe('Template Mixins', function () {
                 };
                 middleware(req, res, next);
                 res.locals['input-date']().call(res.locals, 'field-name');
-                render.should.have.been.calledTwice;
+                render.callCount.should.be.equal(6);
             });
 
             it('looks up field label', function () {
@@ -459,9 +463,9 @@ describe('Template Mixins', function () {
 
                 render.should.have.been.called;
 
-                var dayCall = render.getCall(0),
-                    monthCall = render.getCall(1),
-                    yearCall = render.getCall(2);
+                var dayCall = render.getCall(2),
+                    monthCall = render.getCall(5),
+                    yearCall = render.getCall(8);
 
                 dayCall.should.have.been.calledWith(sinon.match({
                     label: 'fields.field-name-day.label'
@@ -482,20 +486,18 @@ describe('Template Mixins', function () {
                 translate.withArgs('fields.field-name-month.label').returns('Month');
                 translate.withArgs('fields.field-name-year.label').returns('Year');
 
-                middleware = mixins({
-                    fields: {
-                        'field-name': {}
-                    },
-                    translate: translate
-                });
+                middleware = mixins({ translate: translate });
+                res.locals.options.fields = {
+                    'field-name': {}
+                };
                 middleware(req, res, next);
                 res.locals['input-date']().call(res.locals, 'field-name');
 
                 render.should.have.been.called;
 
-                var dayCall = render.getCall(0),
-                    monthCall = render.getCall(1),
-                    yearCall = render.getCall(2);
+                var dayCall = render.getCall(1),
+                    monthCall = render.getCall(3),
+                    yearCall = render.getCall(5);
 
                 dayCall.should.have.been.calledWith(sinon.match({
                     label: 'Day'
@@ -533,9 +535,9 @@ describe('Template Mixins', function () {
                 middleware(req, res, next);
                 res.locals['input-date']().call(res.locals, 'date');
 
-                var dayCall = render.getCall(0),
-                    monthCall = render.getCall(1),
-                    yearCall = render.getCall(2);
+                var dayCall = render.getCall(2),
+                    monthCall = render.getCall(5),
+                    yearCall = render.getCall(8);
 
                 dayCall.should.have.been.calledWithExactly(sinon.match({
                     attributes: [
@@ -567,9 +569,9 @@ describe('Template Mixins', function () {
 
                     render.called;
 
-                    var dayCall = render.getCall(0),
-                        monthCall = render.getCall(1),
-                        yearCall = render.getCall(2);
+                    var dayCall = render.getCall(2),
+                        monthCall = render.getCall(5),
+                        yearCall = render.getCall(8);
 
                     dayCall.should.have.been.calledWith(sinon.match({
                         autocomplete: 'bday-day'
@@ -599,9 +601,9 @@ describe('Template Mixins', function () {
 
                     render.called;
 
-                    var dayCall = render.getCall(0),
-                        monthCall = render.getCall(1),
-                        yearCall = render.getCall(2);
+                    var dayCall = render.getCall(2),
+                        monthCall = render.getCall(5),
+                        yearCall = render.getCall(8);
 
                     dayCall.should.have.been.calledWith(sinon.match({
                         autocomplete: 'day-type'
@@ -627,9 +629,9 @@ describe('Template Mixins', function () {
 
                     render.called;
 
-                    var dayCall = render.getCall(0),
-                        monthCall = render.getCall(1),
-                        yearCall = render.getCall(2);
+                    var dayCall = render.getCall(2),
+                        monthCall = render.getCall(5),
+                        yearCall = render.getCall(8);
 
                     dayCall.should.have.been.calledWith(sinon.match({
                         autocomplete: 'off'
@@ -650,9 +652,9 @@ describe('Template Mixins', function () {
 
                     render.called;
 
-                    var dayCall = render.getCall(0),
-                        monthCall = render.getCall(1),
-                        yearCall = render.getCall(2);
+                    var dayCall = render.getCall(2),
+                        monthCall = render.getCall(5),
+                        yearCall = render.getCall(8);
 
                     dayCall.should.have.been.calledWith(sinon.match({
                         autocomplete: undefined
@@ -675,9 +677,9 @@ describe('Template Mixins', function () {
 
                 render.called;
 
-                var dayCall = render.getCall(0),
-                    monthCall = render.getCall(1),
-                    yearCall = render.getCall(2);
+                var dayCall = render.getCall(2),
+                    monthCall = render.getCall(5),
+                    yearCall = render.getCall(8);
 
                 dayCall.should.have.been.calledWith(sinon.match({
                     label: 'name.space.fields.field-name-day.label'
@@ -696,13 +698,13 @@ describe('Template Mixins', function () {
                 middleware(req, res, next);
                 res.locals['input-date']().call(res.locals, 'field-name');
 
-                render.getCall(0).should.have.been.calledWithExactly(sinon.match({
-                    date: true
-                }));
-                render.getCall(1).should.have.been.calledWithExactly(sinon.match({
-                    date: true
-                }));
                 render.getCall(2).should.have.been.calledWithExactly(sinon.match({
+                    date: true
+                }));
+                render.getCall(5).should.have.been.calledWithExactly(sinon.match({
+                    date: true
+                }));
+                render.getCall(8).should.have.been.calledWithExactly(sinon.match({
                     date: true
                 }));
             });
@@ -1035,7 +1037,7 @@ describe('Template Mixins', function () {
                 };
                 middleware(req, res, next);
                 res.locals['radio-group']().call(res.locals, 'field-name');
-                render.should.have.been.calledWith(sinon.match(function (value) {
+                render.getCall(3).should.have.been.calledWith(sinon.match(function (value) {
                     var obj = value.options[0];
                     return _.isMatch(obj, {
                         label: 'Foo',
@@ -1048,18 +1050,21 @@ describe('Template Mixins', function () {
             });
 
             it('looks up field label from translations when the option is defined as a string', function () {
+                req.translate = sinon.stub();
                 res.locals.options.fields = {
                     'field-name': {
                         options: ['foo', 'bar']
-                    }
+                    },
+                    translate: translate
                 };
                 middleware(req, res, next);
                 res.locals['radio-group']().call(res.locals, 'field-name');
-                render.args[0][0].options[0].label.should.be.equal('fields.field-name.options.foo.label');
-                render.args[0][0].options[1].label.should.be.equal('fields.field-name.options.bar.label');
+                req.translate.should.have.been.calledWithExactly('fields.field-name.options.foo.label');
+                req.translate.should.have.been.calledWithExactly('fields.field-name.options.bar.label');
             });
 
             it('looks up field label from translations when the option is defined as an object', function () {
+                req.translate = sinon.stub();
                 res.locals.options.fields = {
                     'field-name': {
                         options: [{
@@ -1071,8 +1076,8 @@ describe('Template Mixins', function () {
                 };
                 middleware(req, res, next);
                 res.locals['radio-group']().call(res.locals, 'field-name');
-                render.args[0][0].options[0].label.should.be.equal('fields.field-name.options.foo.label');
-                render.args[0][0].options[1].label.should.be.equal('fields.field-name.options.bar.label');
+                req.translate.should.have.been.calledWithExactly('fields.field-name.options.foo.label');
+                req.translate.should.have.been.calledWithExactly('fields.field-name.options.bar.label');
             });
 
             it('should have classes if one or more were specified against the field', function () {
@@ -1209,13 +1214,11 @@ describe('Template Mixins', function () {
                 };
                 middleware(req, res, next);
                 res.locals['radio-group']().call(res.locals, 'field-name');
-                render.should.have.been.calledWith(sinon.match(function (value) {
-                    var array = value.options[0].attributes;
-                    return _.isEqual(array, [
-                        { attribute: 'data-galabel', value: 'XYZ123'},
-                        { attribute: 'data-gacategory', value: 'Journey'}
-                    ]);
-                }));
+                var attributes = render.args[0][0].options.fields['field-name'].options[0].attributes;
+                attributes.should.eql([
+                    { attribute: 'data-galabel', value: 'XYZ123'},
+                    { attribute: 'data-gacategory', value: 'Journey'}
+                ]);
             });
 
             it('uses static field data when dynamic field config does not exist', function () {
@@ -1408,7 +1411,7 @@ describe('Template Mixins', function () {
                     };
                     middleware(req, res, next);
                     res.locals['checkbox-group']().call(res.locals, 'field-name');
-                    var options = render.args[0][0].options;
+                    var options = render.args[5][0].options;
                     _.pluck(options.filter(function (option) {
                         return option.selected;
                     }), 'value').should.be.eql(['foo']);
@@ -1420,7 +1423,7 @@ describe('Template Mixins', function () {
                     };
                     middleware(req, res, next);
                     res.locals['checkbox-group']().call(res.locals, 'field-name');
-                    var options = render.args[0][0].options;
+                    var options = render.args[5][0].options;
                     _.pluck(options.filter(function (option) {
                         return option.selected;
                     }), 'value').should.be.eql(['bar']);
@@ -1432,7 +1435,7 @@ describe('Template Mixins', function () {
                     };
                     middleware(req, res, next);
                     res.locals['checkbox-group']().call(res.locals, 'field-name');
-                    var options = render.args[0][0].options;
+                    var options = render.args[5][0].options;
                     _.pluck(options.filter(function (option) {
                         return option.selected;
                     }), 'value').should.be.eql(['foo', 'baz']);
@@ -1531,7 +1534,7 @@ describe('Template Mixins', function () {
                 middleware(req, res, next);
                 res.locals['select']().call(res.locals, 'field-name');
                 render.should.have.been.calledWith(sinon.match({
-                    hint: null
+                    hint: ''
                 }));
             });
 
@@ -1603,13 +1606,11 @@ describe('Template Mixins', function () {
                 };
                 middleware(req, res, next);
                 res.locals['select']().call(res.locals, 'field-name');
-                render.should.have.been.calledWith(sinon.match(function (value) {
-                    var array = value.options[0].attributes;
-                    return _.isEqual(array, [
-                        { attribute: 'data-galabel', value: 'XYZ123'},
-                        { attribute: 'data-gacategory', value: 'Journey'}
-                    ]);
-                }));
+                var attributes = render.args[0][0].options.fields['field-name'].options[0].attributes;
+                attributes.should.eql([
+                    { attribute: 'data-galabel', value: 'XYZ123'},
+                    { attribute: 'data-gacategory', value: 'Journey'}
+                ]);
             });
         });
 
@@ -1634,6 +1635,49 @@ describe('Template Mixins', function () {
 
         beforeEach(function () {
             middleware = mixins();
+        });
+
+        it('looks up variables within the returned label translation', function () {
+            res.locals.foo = 'bar';
+            var stubbedTranslate = sinon.stub().returns('a label with {{foo}}');
+            middleware = mixins({
+                'field-name': {},
+                translate: stubbedTranslate
+            });
+            middleware(req, res, next);
+            res.locals['input-text']().call(res.locals, 'field-name')
+                .should.contain('a label with bar');
+        });
+
+        describe('t', function () {
+            var stubbedTranslate;
+
+            beforeEach(function () {
+                stubbedTranslate = sinon.stub().returns('');
+                middleware = mixins({
+                    translate: stubbedTranslate
+                });
+                middleware(req, res, next);
+            });
+
+            it('adds a function to res.locals', function () {
+                res.locals['t'].should.be.a('function');
+            });
+
+            it('returns a function', function () {
+                res.locals['t']().should.be.a('function');
+            });
+
+            it('calls translate passing the given key', function () {
+                res.locals['t']().call(res.locals, 'fields.field-1.label');
+                stubbedTranslate.should.have.been.calledOnce.and.calledWithExactly('fields.field-1.label');
+            });
+
+            it('looks up variables in the returned translation', function () {
+                res.locals.foo = 'bar';
+                stubbedTranslate.returns('some text {{foo}}');
+                res.locals['t']().call(res.locals, 'fields.field-1.label').should.be.equal('some text bar');
+            });
         });
 
         describe('date', function () {
