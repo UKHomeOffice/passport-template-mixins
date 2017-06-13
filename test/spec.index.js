@@ -1785,6 +1785,37 @@ describe('Template Mixins', function () {
             });
         });
 
+        describe('capscase', function () {
+
+            beforeEach(function () {
+                middleware(req, res, next);
+            });
+
+            it('adds a function to res.locals', function () {
+                res.locals['capscase'].should.be.a('function');
+            });
+
+            it('returns a function', function () {
+                res.locals['capscase']().should.be.a('function');
+            });
+
+            it('changes text to capscase', function () {
+                res.locals['capscase']().call(res.locals, 'abcdef').should.equal('Abcdef');
+            });
+
+            it('capitalisaes only the first word', function () {
+                res.locals['capscase']().call(res.locals, 'abc def').should.equal('Abc def');
+            });
+
+            it('does not change capitalisation of other words', function () {
+                res.locals['capscase']().call(res.locals, 'abc DEF Hij').should.equal('Abc DEF Hij');
+            });
+
+            it('returns an empty string if no text given', function () {
+                res.locals['capscase']().call(res.locals).should.equal('');
+            });
+        });
+
         describe('currency', function () {
 
             beforeEach(function () {
@@ -1827,6 +1858,60 @@ describe('Template Mixins', function () {
 
             it('returns an empty string if no text given', function () {
                 res.locals['currency']().call(res.locals).should.equal('');
+            });
+
+            it('formats whole numbers with custom currency symbol', function () {
+                res.locals.currencySymbol = '$';
+                res.locals['currency']().call(res.locals, '3.00').should.equal('$3');
+            });
+        });
+
+        describe('currencyOrFree', function () {
+
+            beforeEach(function () {
+                middleware(req, res, next);
+            });
+
+            it('adds a function to res.locals', function () {
+                res.locals['currencyOrFree'].should.be.a('function');
+            });
+
+            it('returns a function', function () {
+                res.locals['currencyOrFree']().should.be.a('function');
+            });
+
+            it('formats whole numbers with no decimal places', function () {
+                res.locals['currencyOrFree']().call(res.locals, '3.00').should.equal('£3');
+            });
+
+            it('formats 3.50 to two decimal places', function () {
+                res.locals['currencyOrFree']().call(res.locals, '3.50').should.equal('£3.50');
+            });
+
+            it('formats 4.5678 to two decimal places from a local variable', function () {
+                res.locals.value = 4.5678;
+                res.locals['currencyOrFree']().call(res.locals, '{{value}}').should.equal('£4.57');
+            });
+
+            it('returns zero as free', function () {
+                res.locals['currencyOrFree']().call(res.locals, '0').should.equal('free');
+            });
+
+            it('returns 0.00 as free', function () {
+                res.locals['currencyOrFree']().call(res.locals, '0.00').should.equal('free');
+            });
+
+            it('returns 0.00 from a variable as free', function () {
+                res.locals.value = 0.00;
+                res.locals['currencyOrFree']().call(res.locals, '{{value}}').should.equal('free');
+            });
+
+            it('returns non number as-is', function () {
+                res.locals['currencyOrFree']().call(res.locals, 'test').should.equal('test');
+            });
+
+            it('returns empty string as-is', function () {
+                res.locals['currencyOrFree']().call(res.locals, '').should.equal('');
             });
         });
 
