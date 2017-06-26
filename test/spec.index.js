@@ -328,6 +328,32 @@ describe('Template Mixins', function () {
                 }));
             });
 
+            it('sets `labelTextClassName` when set in field options', function () {
+                res.locals.options.fields = {
+                    'field-name': {
+                        labelTextClassName: 'visually-hidden'
+                    }
+                };
+                middleware(req, res, next);
+                res.locals['input-text']().call(res.locals, 'field-name');
+                render.should.have.been.calledWith(sinon.match({
+                    labelTextClassName: 'visually-hidden'
+                }));
+            });
+
+            it('sets all classes of `labelTextClassName` option', function () {
+                res.locals.options.fields = {
+                    'field-name': {
+                        labelTextClassName: ['abc', 'def']
+                    }
+                };
+                middleware(req, res, next);
+                res.locals['input-text']().call(res.locals, 'field-name');
+                render.should.have.been.calledWith(sinon.match({
+                    labelTextClassName: 'abc def'
+                }));
+            });
+
             it('sets additional element attributes', function () {
                 res.locals.options.fields = {
                     'field-name': {
