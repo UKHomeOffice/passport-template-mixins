@@ -63,13 +63,16 @@ Static field configuration - Default: `{}`
 
 ```
 t
-time
 selected
 lowercase
 uppercase
+capscase
 hyphenate
 date
+time
 currency
+currencyOrFree
+url
 select
 input-text
 input-date
@@ -103,3 +106,38 @@ textarea
 - `toggle`: Can be used to toggle the display of the HTML element with a matching `id`. See [passports-frontend-toolkit](https://github.com/UKHomeOffice/passports-frontend-toolkit/blob/master/assets/javascript/progressive-reveal.js) for details.
 - `attributes`: A hash of key/value pairs applicable to a HTML `textarea` field. Each key/value is assigned as an attribute of the `textarea`. For example `spellcheck="true"`.
 - `child`: Render a child partial beneath each option in an `optionGroup`. Accepts a custom mustache template string, a custom partial in the format `partials/{your-partial-name}` or a template mixin key which will be rendered within a panel element partial.
+
+## `date` mixin
+
+Dates should be provided to the date lambda in ISO format
+```
+{{#date}}2017-06-03T12:34:56.000Z{/date}
+3 June 2017
+```
+
+A moment format can be supplied. The default format is D MMMM YYYY.
+```
+{{#date}}2017-06-3T12:34:56.000Z|DD MMM YYYY HH:MMa{/date}
+03 Jun 2017 12:34pm
+```
+
+## `time` mixin
+
+The time formatter wraps a formatted time to correct for GDS standard:
+```
+{{#time}}3:00pm{{/time}}
+3pm
+
+{{#time}}11 May 2017 at 12:00pm{{/time}}
+11 May 2017 at midday
+
+{{#time}}12:00am{{/time}}
+Midnight
+```
+
+Comma separated options can be provided to only do transforms for midday, midnight, or shortened time:
+```
+{{#time}}12:00pm|short,midnight{{/time}}
+12pm
+```
+

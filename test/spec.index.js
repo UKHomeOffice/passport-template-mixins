@@ -1760,6 +1760,18 @@ describe('Template Mixins', function () {
                 res.locals['time']().call(res.locals, '12:00pm 26 March 2015').should.equal('Midday 26 March 2015');
             });
 
+            it('changes 4:00pm to 4pm', function () {
+                res.locals['time']().call(res.locals, '26 March 2015 4:00pm').should.equal('26 March 2015 4pm');
+            });
+
+            it('changes 12:00pm to 12pm if options only specify short', function () {
+                res.locals['time']().call(res.locals, '26 March 2015 12:00pm|short').should.equal('26 March 2015 12pm');
+            });
+
+            it('changes 12:00am to 12am if options do not specify midnight', function () {
+                res.locals['time']().call(res.locals, '26 March 2015 12:00am|short,midday').should.equal('26 March 2015 12am');
+            });
+
             it('should pass through other times', function () {
                 res.locals['time']().call(res.locals, '6:30am 26 March 2015').should.equal('6:30am 26 March 2015');
             });
