@@ -89,6 +89,8 @@ textarea
 ## Field options
 
 - `className`: A string or array of string class names.
+- `labelClassName`: A string or array of string class names for the label, hint, and error section.
+- `labelTextClassName`: A string or array of string class names for the label text.
 - `label`: The intended value of the HTML `label` attribute.
 - `type`: The value of the HTML input `type` attribute.
 - `required`: Value applied to `aria-required` HTML attribute.

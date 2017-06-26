@@ -4,7 +4,7 @@
 {{/groupAttributes}}
 >
     <label for="{{id}}" class="{{labelClassName}}">
-        {{{label}}}
+        {{#labelTextClassName}}<span class="{{labelTextClassName}}">{{/labelTextClassName}}{{{label}}}{{#labelTextClassName}}</span>{{/labelTextClassName}}
         {{#hint}}<span {{$hintId}}id="{{hintId}}" {{/hintId}}class="form-hint">{{hint}}</span>{{/hint}}
         {{^date}}{{#error}}<span class="error-message">{{error.message}}</span>{{/error}}{{/date}}
     </label>
