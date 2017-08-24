@@ -802,6 +802,24 @@ describe('Template Mixins', function () {
                 }));
             });
 
+            it('id is defaulted to submit-button', function () {
+                middleware(req, res, next);
+                res.locals['input-submit']().call(res.locals, 'button-id');
+                render.should.have.been.calledWith(sinon.match({
+                    value: 'buttons.button-id',
+                    id: 'submit-button'
+                }));
+            });
+
+            it('id is overridden if provided', function () {
+                middleware(req, res, next);
+                res.locals['input-submit']().call(res.locals, 'button-id overridden-id');
+                render.should.have.been.calledWith(sinon.match({
+                    value: 'buttons.button-id',
+                    id: 'overridden-id'
+                }));
+            });
+
             it('prefixes translation lookup with namespace if provided', function () {
                 middleware = mixins({ translate: translate, sharedTranslationsKey: 'name.space' });
                 middleware(req, res, next);
