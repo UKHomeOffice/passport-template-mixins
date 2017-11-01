@@ -720,18 +720,18 @@ describe('Template Mixins', function () {
                 }));
             });
 
-            it('sets a date boolean to conditionally show input errors', function () {
+            it('sets an errorGroup to conditionally show input errors', function () {
                 middleware(req, res, next);
                 res.locals['input-date']().call(res.locals, 'field-name');
 
                 render.getCall(2).should.have.been.calledWithExactly(sinon.match({
-                    date: true
+                    errorGroup: 'field-name'
                 }));
                 render.getCall(5).should.have.been.calledWithExactly(sinon.match({
-                    date: true
+                    errorGroup: 'field-name'
                 }));
                 render.getCall(8).should.have.been.calledWithExactly(sinon.match({
-                    date: true
+                    errorGroup: 'field-name'
                 }));
             });
 
