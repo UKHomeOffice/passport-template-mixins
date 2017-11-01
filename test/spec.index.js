@@ -136,6 +136,30 @@ describe('Template Mixins', function () {
             Hogan.compile.restore();
         });
 
+        describe('error-group', function () {
+            it('adds a function to res.locals', function () {
+                middleware(req, res, next);
+                res.locals['error-group'].should.be.a('function');
+            });
+
+            it('returns a function', function () {
+                middleware(req, res, next);
+                res.locals['error-group']().should.be.a('function');
+            });
+        });
+
+        describe('error-group-end', function () {
+            it('adds a function to res.locals', function () {
+                middleware(req, res, next);
+                res.locals['error-group-end'].should.be.a('function');
+            });
+
+            it('returns a function', function () {
+                middleware(req, res, next);
+                res.locals['error-group-end']().should.be.a('function');
+            });
+        });
+
         describe('input-text', function () {
 
             it('adds a function to res.locals', function () {
@@ -452,6 +476,38 @@ describe('Template Mixins', function () {
                 }));
             });
 
+        });
+
+        describe('input-date-group', function () {
+            it('adds a function to res.locals', function () {
+                middleware(req, res, next);
+                res.locals['input-date-group'].should.be.a('function');
+            });
+
+            it('returns a function', function () {
+                middleware(req, res, next);
+                res.locals['input-date-group']().should.be.a('function');
+            });
+
+            it('returns an input-date wrapped in an error-group', function () {
+                middleware(req, res, next);
+                var errorGroup = sinon.stub().returns('error-group-html');
+                res.locals['error-group'] = sinon.stub().returns(errorGroup);
+                var inputDate = sinon.stub().returns('input-date-html');
+                res.locals['input-date'] = sinon.stub().returns(inputDate);
+                var errorGroupEnd = sinon.stub().returns('error-group-end-html');
+                res.locals['error-group-end'] = sinon.stub().returns(errorGroupEnd);
+
+                var context = {};
+
+                var rendered = res.locals['input-date-group']().call(context, 'key');
+
+                errorGroup.should.have.been.calledWithExactly('key').and.calledOn(context);
+                inputDate.should.have.been.calledWithExactly('key').and.calledOn(context);
+                errorGroupEnd.should.have.been.calledWithExactly('key').and.calledOn(context);
+
+                rendered.should.equal('error-group-html\ninput-date-html\nerror-group-end-html');
+            });
         });
 
         describe('input-date', function () {
