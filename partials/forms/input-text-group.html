@@ -1,4 +1,4 @@
-<div id="{{id}}-group" class="form-group{{#compound}} form-group-compound{{/compound}}{{^date}}{{#error}} error{{/error}}{{/date}}"
+<div id="{{id}}-group" class="form-group{{#compound}} form-group-compound{{/compound}}{{^errorGroup}}{{#error}} error{{/error}}{{/errorGroup}}"
 {{#groupAttributes}}
     {{attribute}}="{{value}}"
 {{/groupAttributes}}
@@ -6,13 +6,13 @@
     <label for="{{id}}" class="{{labelClassName}}">
         {{#labelTextClassName}}<span class="{{labelTextClassName}}">{{/labelTextClassName}}{{{label}}}{{#labelTextClassName}}</span>{{/labelTextClassName}}
         {{#hint}}<span {{$hintId}}id="{{hintId}}" {{/hintId}}class="form-hint">{{hint}}</span>{{/hint}}
-        {{^date}}{{#error}}<span class="error-message">{{error.message}}</span>{{/error}}{{/date}}
+        {{^errorGroup}}{{#error}}<span class="error-message">{{error.message}}</span>{{/error}}{{/errorGroup}}
     </label>
     <input
         type="{{type}}"
         name="{{id}}"
         id="{{id}}"
-        class="form-control{{#className}} {{className}}{{/className}}{{#date}}{{#error}} invalid-input{{/error}}{{/date}}"
+        class="form-control{{#className}} {{className}}{{/className}}{{#errorGroup}}{{#error}} invalid-input{{/error}}{{/errorGroup}}"
         aria-required="{{required}}"
         {{#value}} value="{{value}}"{{/value}}
         {{#min}} min="{{min}}"{{/min}}
