@@ -251,7 +251,7 @@ describe('Template Mixins', function () {
                 middleware(req, res, next);
                 res.locals['input-text']().call(res.locals, 'field-name');
                 render.should.have.been.calledWith(sinon.match({
-                    error: err
+                    error: true
                 }));
             });
 
@@ -574,7 +574,10 @@ describe('Template Mixins', function () {
 
                 var rendered = res.locals['input-date-group']().call(context, 'key');
 
-                errorGroup.should.have.been.calledWithExactly('key').and.calledOn(context);
+                errorGroup.should.have.been.calledWithExactly('key', {
+                    groupClassName: 'form-date',
+                    legendClassName: 'form-label-bold'
+                }).and.calledOn(context);
                 inputDate.should.have.been.calledWithExactly('key').and.calledOn(context);
                 errorGroupEnd.should.have.been.calledWithExactly('key').and.calledOn(context);
 
