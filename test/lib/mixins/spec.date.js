@@ -416,7 +416,7 @@ describe('Date Mixin', () => {
 
                 errors['date1'].should.eql(new instance.Error(
                     'date1',
-                    { type: 'date-invalid-day' },
+                    { type: 'date-invalid-day', errorGroup: 'date1' },
                     req));
                 errors['date1-day'].should.eql(new instance.Error(
                     'date1-day',
@@ -431,7 +431,7 @@ describe('Date Mixin', () => {
 
                 errors['date1'].should.eql(new instance.Error(
                     'date1',
-                    { type: 'date-invalid-day' },
+                    { type: 'date-invalid-day', errorGroup: 'date1' },
                     req));
                 errors['date1-day'].should.eql(new instance.Error(
                     'date1-day',
@@ -446,7 +446,7 @@ describe('Date Mixin', () => {
 
                 errors['date1'].should.eql(new instance.Error(
                     'date1',
-                    { type: 'date-invalid-month' },
+                    { type: 'date-invalid-month', errorGroup: 'date1' },
                     req));
                 errors['date1-month'].should.eql(new instance.Error(
                     'date1-month',
