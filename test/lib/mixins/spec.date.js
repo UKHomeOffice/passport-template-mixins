@@ -366,7 +366,7 @@ describe('Date Mixin', () => {
 
                 instance.validateDateField(req, 'date1', errors);
 
-                errors['date1'].type.should.equal('date-day');
+                errors['date1'].type.should.equal('date-numeric-day');
             });
 
             it('should create a new error if letters are used in the month', () => {
@@ -378,7 +378,7 @@ describe('Date Mixin', () => {
 
                 instance.validateDateField(req, 'date1', errors);
 
-                errors['date1'].type.should.equal('date-month');
+                errors['date1'].type.should.equal('date-numeric-month');
             });
 
             it('should create a new error if letters are used in multiple parts of the date', () => {
@@ -392,7 +392,7 @@ describe('Date Mixin', () => {
 
                 instance.validateDateField(req, 'date1', errors);
 
-                errors['date1'].type.should.equal('date-year-month-day');
+                errors['date1'].type.should.equal('date-numeric-year-month-day');
             });
 
             it('should not set a date field error if an error is not numeric', () => {
@@ -416,11 +416,11 @@ describe('Date Mixin', () => {
 
                 errors['date1'].should.eql(new instance.Error(
                     'date1',
-                    { type: 'date-invalid-day', errorGroup: 'date1' },
+                    { type: 'date-day', errorGroup: 'date1' },
                     req));
                 errors['date1-day'].should.eql(new instance.Error(
                     'date1-day',
-                    { type: 'date-invalid-day', errorGroup: 'date1' },
+                    { type: 'date-day', errorGroup: 'date1' },
                     req));
             });
 
@@ -431,11 +431,11 @@ describe('Date Mixin', () => {
 
                 errors['date1'].should.eql(new instance.Error(
                     'date1',
-                    { type: 'date-invalid-day', errorGroup: 'date1' },
+                    { type: 'date-day', errorGroup: 'date1' },
                     req));
                 errors['date1-day'].should.eql(new instance.Error(
                     'date1-day',
-                    { type: 'date-invalid-day', errorGroup: 'date1' },
+                    { type: 'date-day', errorGroup: 'date1' },
                     req));
             });
 
@@ -446,11 +446,11 @@ describe('Date Mixin', () => {
 
                 errors['date1'].should.eql(new instance.Error(
                     'date1',
-                    { type: 'date-invalid-month', errorGroup: 'date1' },
+                    { type: 'date-month', errorGroup: 'date1' },
                     req));
                 errors['date1-month'].should.eql(new instance.Error(
                     'date1-month',
-                    { type: 'date-invalid-month', errorGroup: 'date1' },
+                    { type: 'date-month', errorGroup: 'date1' },
                     req));
             });
 
