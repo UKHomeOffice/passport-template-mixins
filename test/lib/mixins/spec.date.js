@@ -415,7 +415,7 @@ describe('Date Mixin', () => {
                 instance.validateDateField(req, 'date1', errors);
 
                 errors['date1'].should.eql(new instance.Error(
-                    'date1',
+                    'date1-day',
                     { type: 'date-day', errorGroup: 'date1' },
                     req));
                 errors['date1-day'].should.eql(new instance.Error(
@@ -430,7 +430,7 @@ describe('Date Mixin', () => {
                 instance.validateDateField(req, 'date1', errors);
 
                 errors['date1'].should.eql(new instance.Error(
-                    'date1',
+                    'date1-day',
                     { type: 'date-day', errorGroup: 'date1' },
                     req));
                 errors['date1-day'].should.eql(new instance.Error(
@@ -445,7 +445,7 @@ describe('Date Mixin', () => {
                 instance.validateDateField(req, 'date1', errors);
 
                 errors['date1'].should.eql(new instance.Error(
-                    'date1',
+                    'date1-month',
                     { type: 'date-month', errorGroup: 'date1' },
                     req));
                 errors['date1-month'].should.eql(new instance.Error(
