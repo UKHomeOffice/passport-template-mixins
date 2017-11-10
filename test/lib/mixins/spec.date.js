@@ -355,7 +355,77 @@ describe('Date Mixin', () => {
             errors.should.eql({});
         });
 
-        describe('sets numeric error if the parts only have numeric errors', () => {
+        describe('sets required error if the parts have required errors', () => {
+
+            it('should create a new error if the day is missing', () => {
+                errors = {
+                    'other': { type: 'other'},
+                    'date1': { type: 'original' },
+                    'date1-day': { errorGroup: 'date1', type: 'required'}
+                };
+
+                instance.validateDateField(req, 'date1', errors);
+
+                errors['date1'].type.should.equal('required-day');
+            });
+
+            it('should create the first part required error if the day and month are missing', () => {
+                errors = {
+                    'other': { type: 'other'},
+                    'date1': { type: 'original' },
+                    'date1-day': { errorGroup: 'date1', type: 'required'},
+                    'date1-month': { errorGroup: 'date1', type: 'required'}
+                };
+
+                instance.validateDateField(req, 'date1', errors);
+
+                errors['date1'].type.should.equal('required-day');
+            });
+
+            it('should create a new required error if all three parts are missing', () => {
+                errors = {
+                    'other': { type: 'other'},
+                    'date1': { type: 'original' },
+                    'date1-day': { errorGroup: 'date1', type: 'required'},
+                    'date1-month': { errorGroup: 'date1', type: 'required'},
+                    'date1-year': { errorGroup: 'date1', type: 'required'}
+                };
+
+                instance.validateDateField(req, 'date1', errors);
+
+                errors['date1'].type.should.equal('required');
+            });
+
+            it('should create a new required error if inexact and the month and year parts are missing', () => {
+                errors = {
+                    'other': { type: 'other'},
+                    'date1': { type: 'original' },
+                    'date1-month': { errorGroup: 'date1', type: 'required'},
+                    'date1-year': { errorGroup: 'date1', type: 'required'}
+                };
+
+                options.fields['date1'].inexact = true;
+
+                instance.validateDateField(req, 'date1', errors);
+
+                errors['date1'].type.should.equal('required');
+            });
+        });
+
+        describe('sets numeric error if the parts have numeric errors', () => {
+
+            it('should leaving existing error if the value is empty', () => {
+                errors = {
+                    'other': { type: 'other'},
+                    'date1': { type: 'original' },
+                    'date1-day': { errorGroup: 'date1', type: 'numeric'}
+                };
+                req.form.values['date1']= '';
+
+                instance.validateDateField(req, 'date1', errors);
+
+                errors['date1'].type.should.equal('original');
+            });
 
             it('should create a new error if letters are used in the day', () => {
                 errors = {
