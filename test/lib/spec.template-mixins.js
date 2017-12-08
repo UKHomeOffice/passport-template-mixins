@@ -564,7 +564,7 @@ describe('Template Mixins', function () {
             it('returns an input-date wrapped in an error-group', function () {
                 middleware(req, res, next);
                 var errorGroup = sinon.stub().returns('error-group-html');
-                res.locals['error-group'] = sinon.stub().returns(errorGroup);
+                res.locals['input-date-error-group'] = sinon.stub().returns(errorGroup);
                 var inputDate = sinon.stub().returns('input-date-html');
                 res.locals['input-date'] = sinon.stub().returns(inputDate);
                 var errorGroupEnd = sinon.stub().returns('error-group-end-html');
@@ -574,10 +574,7 @@ describe('Template Mixins', function () {
 
                 var rendered = res.locals['input-date-group']().call(context, 'key');
 
-                errorGroup.should.have.been.calledWithExactly('key', {
-                    groupClassName: 'form-date',
-                    legendClassName: 'form-label-bold'
-                }).and.calledOn(context);
+                errorGroup.should.have.been.calledWithExactly('key').and.calledOn(context);
                 inputDate.should.have.been.calledWithExactly('key').and.calledOn(context);
                 errorGroupEnd.should.have.been.calledWithExactly('key').and.calledOn(context);
 
