@@ -255,6 +255,23 @@ describe('Template Mixins', function () {
                 }));
             });
 
+            it('renders group error if context of this is changed', function () {
+                var err = new Error();
+                res.locals.errors = {
+                    'parent': err
+                };
+                res.locals.options.fields = {
+                    'field-name': {
+                        errorGroup: 'parent'
+                    }
+                };
+                middleware(req, res, next);
+                res.locals['input-text']().call(this, 'field-name');
+                render.should.have.been.calledWith(sinon.match({
+                    error: true
+                }));
+            });
+
             it('does not render group error if it is from a group member', function () {
                 var err = new Error();
                 err.errorGroup = 'parent';
