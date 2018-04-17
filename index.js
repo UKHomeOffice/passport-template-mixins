@@ -1,7 +1,21 @@
 'use strict';
 
-module.exports = require('./lib/template-mixins');
+const lambdas = require('./lib/lambdas');
+const fields = require('./lib/fields');
+const mixins = require('./lib/mixins');
 
-module.exports.mixins = {
-    Date: require('./lib/mixins/date')
+module.exports = options => {
+    let lambdaMiddleware = lambdas.addLambdas(options);
+    let fieldsMiddleware = fields.addFields(options);
+
+    return (req, res, next) => {
+        lambdaMiddleware(req, res);
+        fieldsMiddleware(req, res);
+        next();
+    };
 };
+
+module.exports.mixins = mixins;
+module.exports.baseFields = fields.baseFields;
+module.exports.fields = fields.fields;
+module.exports.lambdas = lambdas.lambdas;

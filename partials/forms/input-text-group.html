@@ -1,17 +1,17 @@
-<div id="{{id}}-group" class="form-group{{#compound}} form-group-compound{{/compound}}{{^errorGroup}}{{#error}} error{{/error}}{{/errorGroup}}"
+<div id="{{key}}-group" class="form-group{{#compound}} form-group-compound{{/compound}}{{^errorGroup}}{{#error}} error{{/error}}{{/errorGroup}}"
 {{#groupAttributes}}
     {{attribute}}="{{value}}"
 {{/groupAttributes}}
 >
-    <label for="{{id}}" class="{{labelClassName}}">
+    <label for="{{key}}" class="{{labelClassName}}">
         {{#labelTextClassName}}<span class="{{labelTextClassName}}">{{/labelTextClassName}}{{{label}}}{{#labelTextClassName}}</span>{{/labelTextClassName}}
         {{#hint}}<span {{$hintId}}id="{{hintId}}" {{/hintId}}class="form-hint">{{hint}}</span>{{/hint}}
         {{^errorGroup}}{{#error}}<span class="error-message">{{error.message}}</span>{{/error}}{{/errorGroup}}
     </label>
     <input
         type="{{type}}"
-        name="{{id}}"
-        id="{{id}}"
+        name="{{key}}"
+        id="{{key}}"
         class="form-control{{#className}} {{className}}{{/className}}{{#error}} invalid-input{{/error}}"
         aria-required="{{required}}"
         {{#value}} value="{{value}}"{{/value}}

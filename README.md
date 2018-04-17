@@ -12,9 +12,9 @@ npm install [--save] hmpo-template-mixins;
 ## Usage
 
 ```javascript
-var express = require('express');
-var i18n = require('i18n-future');
-var mixins = require('hmpo-template-mixins');
+const express = require('express');
+const i18n = require('i18n-future');
+const mixins = require('hmpo-template-mixins');
 
 app.set('view engine', 'html');
 app.set('views', path.join(__dirname, '/views'));
@@ -55,10 +55,6 @@ Prefixes keys for translation - Default: '' (empty string)
 
 Defines a custom translation method - Default: `req.translate`
 
-### fields
-
-Static field configuration - Default: `{}`
-
 ## Mustache mixins available
 
 ```
@@ -75,7 +71,6 @@ currencyOrFree
 url
 select
 input-text
-input-date
 input-text-compound
 input-text-code
 input-number
@@ -87,6 +82,10 @@ checkbox-required
 checkbox-group
 input-submit
 textarea
+input-date
+input-date-group
+error-group
+error-group-end
 ```
 
 ## Field options
@@ -98,6 +97,7 @@ textarea
 - `type`: The value of the HTML input `type` attribute.
 - `required`: Value applied to `aria-required` HTML attribute.
 - `hint`: This adds context to the label, which it is a part of, for input text, radio groups and textarea. It is used within the input by aria-describedby for screen readers.
+- `hintClassName`: A string or array of string class names for the hint,
 - `maxlength`: Applicable to text-based fields and mapped to the `maxlength` HTML attribute.
 - `options`: Applicable to HTML `select` and `radio` controls and used to generate the items of either HTML element.
 - `selected`: Applicable to `select`, `checkbox`, and `radio` controls. Will render the selected HTML option/element selected or checked.

@@ -16,15 +16,18 @@ describe('Date Mixin', () => {
             template: 'index',
             fields: {
                 'date1': {
+                    autocomplete: 'mydate',
                     validate: [
                         'required',
                         'date'
                     ]
                 },
                 'date2': {
+                    autocomplete: 'off',
                     validate: 'date'
                 },
                 'date2-year': {
+                    autocomplete: 'mycomplete',
                     validate: 'part-validator'
                 },
                 'town': {},
@@ -121,6 +124,20 @@ describe('Date Mixin', () => {
         it('should set the errorGroup to the date field', () => {
             instance.configureDateField(req, 'date1');
             req.form.options.fields['date1-year'].errorGroup.should.equal('date1');
+        });
+
+        it('should set the autocomplete values of the parent date field', () => {
+            instance.configureDateField(req, 'date1');
+            req.form.options.fields['date1-day'].autocomplete.should.equal('mydate-day');
+            req.form.options.fields['date1-month'].autocomplete.should.equal('mydate-month');
+            req.form.options.fields['date1-year'].autocomplete.should.equal('mydate-year');
+        });
+
+        it('should override the autocomplete values specific part configs', () => {
+            instance.configureDateField(req, 'date2');
+            req.form.options.fields['date2-day'].autocomplete.should.equal('off');
+            req.form.options.fields['date2-month'].autocomplete.should.equal('off');
+            req.form.options.fields['date2-year'].autocomplete.should.equal('mycomplete');
         });
     });
 
@@ -359,7 +376,7 @@ describe('Date Mixin', () => {
 
             it('should create a new error if the day is missing', () => {
                 errors = {
-                    'other': { type: 'other'},
+                    'other': { type: 'required'},
                     'date1': { type: 'original' },
                     'date1-day': { errorGroup: 'date1', type: 'required'}
                 };
@@ -371,7 +388,7 @@ describe('Date Mixin', () => {
 
             it('should create the first part required error if the day and month are missing', () => {
                 errors = {
-                    'other': { type: 'other'},
+                    'other': { type: 'required'},
                     'date1': { type: 'original' },
                     'date1-day': { errorGroup: 'date1', type: 'required'},
                     'date1-month': { errorGroup: 'date1', type: 'required'}
@@ -416,7 +433,7 @@ describe('Date Mixin', () => {
 
             it('should leaving existing error if the value is empty', () => {
                 errors = {
-                    'other': { type: 'other'},
+                    'other': { type: 'numeric'},
                     'date1': { type: 'original' },
                     'date1-day': { errorGroup: 'date1', type: 'numeric'}
                 };
