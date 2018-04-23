@@ -566,6 +566,14 @@ describe('Template Mixins', () => {
                 }));
             });
 
+            it('uses a contentKey if specified', () => {
+                middleware(req, res);
+                res.locals['input-text']().call(res.locals, 'field-name contentKey="another"');
+                render.should.have.been.calledWith(sinon.match({
+                    label: 'fields.another.label'
+                }));
+            });
+
             it('throw an error for invalid inline field options', () => {
                 middleware(req, res);
                 expect(() => {
