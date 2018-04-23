@@ -1,15 +1,15 @@
-<div id="{{id}}-group" class="form-group{{#compound}} form-group-compound{{/compound}}{{#error}} error{{/error}}{{#groupClassName}} {{groupClassName}}{{/groupClassName}}"
+<div id="{{key}}-group" class="form-group{{#compound}} form-group-compound{{/compound}}{{#error}} error{{/error}}{{#groupClassName}} {{groupClassName}}{{/groupClassName}}"
 {{#groupAttributes}}
     {{attribute}}="{{value}}"
 {{/groupAttributes}}
 >
-    <label for="{{id}}" class="{{labelClassName}}">
+    <label for="{{key}}" class="{{labelClassName}}">
         {{{label}}}
         {{#hint}}<span {{$hintId}}id="{{hintId}}" {{/hintId}}class="form-hint">{{hint}}</span>{{/hint}}
         {{#error}}<span class="error-message">{{error.message}}</span>{{/error}}
     </label>
-    <select id="{{id}}" class="{{#className}}{{className}}{{/className}}" name="{{id}}" aria-required="{{required}}">
-    {{#options}}
+    <select id="{{key}}" class="{{#className}}{{className}}{{/className}}" name="{{key}}" aria-required="{{required}}">
+    {{#items}}
         <option value="{{value}}"
         {{#selected}}selected{{/selected}}
         {{#attributes}}
@@ -18,6 +18,6 @@
         >
         {{label}}
         </option>
-    {{/options}}
+    {{/items}}
     </select>
 </div>
