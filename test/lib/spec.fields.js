@@ -685,6 +685,33 @@ describe('Template Mixins', () => {
                 }));
             });
 
+            it('sets attributes for date parts', () => {
+                middleware(req, res);
+                res.locals['input-date']().call(res.locals, 'field-name');
+
+                render.should.have.been.called;
+
+                let dayCall = render.getCall(1);
+                let monthCall = render.getCall(3);
+                let yearCall = render.getCall(5);
+
+                dayCall.should.have.been.calledWith(sinon.match({
+                    min: 1,
+                    max: 31,
+                    maxlength: 2
+                }));
+
+                monthCall.should.have.been.calledWith(sinon.match({
+                    min: 1,
+                    max: 12,
+                    maxlength: 2
+                }));
+
+                yearCall.should.have.been.calledWith(sinon.match({
+                    maxlength: 4
+                }));
+            });
+
             it('sets individual date input config for dynamic fields', () => {
                 res.locals.options.fields = {
                     date: {
