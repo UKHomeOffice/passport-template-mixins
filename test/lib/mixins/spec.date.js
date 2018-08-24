@@ -38,6 +38,9 @@ describe('Date Mixin', () => {
         req = {
             form: {
                 options
+            },
+            sessionModel: {
+                get: sinon.stub()
             }
         };
         res = {};
@@ -151,6 +154,7 @@ describe('Date Mixin', () => {
         });
 
         it('should parse out date values if no raw values are present', () => {
+            req.sessionModel.get.withArgs('errorValues').returns(undefined);
             instance.getValues(req, res, callback);
             callback.should.have.been.calledWithExactly(null, {
                 'date1': '1980-04-23',
@@ -165,12 +169,14 @@ describe('Date Mixin', () => {
         });
 
         it('should use raw values if present instead of using date values', () => {
-            options.dateFields = ['date1'];
-            BaseController.prototype.getValues.yields(null, {
-                'date1': '1980-04-23',
+            req.sessionModel.get.withArgs('errorValues').returns({
                 'date1-day-raw': '1',
                 'date1-month-raw': '1',
                 'date1-year-raw': '1900'
+            });
+            options.dateFields = ['date1'];
+            BaseController.prototype.getValues.yields(null, {
+                'date1': '1980-04-23',
             });
             instance.getValues(req, res, callback);
             callback.should.have.been.calledWithExactly(null, {
@@ -178,9 +184,6 @@ describe('Date Mixin', () => {
                 'date1-day': '1',
                 'date1-month': '1',
                 'date1-year': '1900',
-                'date1-day-raw': '1',
-                'date1-month-raw': '1',
-                'date1-year-raw': '1900'
             });
         });
 
