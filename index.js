@@ -3,6 +3,7 @@
 const lambdas = require('./lib/lambdas');
 const fields = require('./lib/fields');
 const mixins = require('./lib/mixins');
+const errors = require('./lib/errors');
 
 module.exports = options => {
     let lambdaMiddleware = lambdas.addLambdas(options);
@@ -11,6 +12,7 @@ module.exports = options => {
     return (req, res, next) => {
         lambdaMiddleware(req, res);
         fieldsMiddleware(req, res);
+        errors.middleware(req, res);
         next();
     };
 };
