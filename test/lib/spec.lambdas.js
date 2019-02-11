@@ -16,31 +16,58 @@ describe('Template Mixins lambdas', () => {
             };
         });
 
-        it('is a function', function () {
+        it('is a function', () => {
             lambdas.addLambdas.should.be.a('function');
         });
 
-        it('returns a function', function () {
+        it('returns a function', () => {
             lambdas.addLambdas().should.be.a('function');
             lambdas.addLambdas().length.should.equal(2);
         });
 
-        describe('adds lambdas and values into res.locals', function () {
+        describe('adds lambdas and values into res.locals', () => {
             beforeEach(() => {
                 lambdas.addLambdas()(req, res);
             });
 
             _.each(lambdas.lambdas, (lambda, name) => {
                 if (typeof lambda === 'function') {
-                    it(`lambda ${name}`, function () {
+                    it(`lambda ${name}`, () => {
                         res.locals[name].should.be.a('function');
                         res.locals[name]().should.be.a('function');
                     });
                 } else {
-                    it(`value ${name}`, function () {
+                    it(`value ${name}`, () => {
                         res.locals[name].should.equal(lambda);
                     });
                 }
+            });
+        });
+
+        describe('adds translate function into res.locals', () => {
+            let translate;
+            beforeEach(() => {
+                translate = sinon.stub().returns('translated');
+            });
+
+            it('calls translate function', () => {
+                lambdas.addLambdas({ translate })(req, res);
+                res.locals.translate.should.be.a('function');
+                let result = res.locals.translate()('args');
+                translate.should.have.been.calledWithExactly('args');
+                result.should.equal('translated');
+            });
+
+            it('adds sharedTranslationsKey to keys', () => {
+                lambdas.addLambdas({ translate, sharedTranslationsKey: 'foo' })(req, res);
+                res.locals.translate()('args');
+                translate.should.have.been.calledWithExactly('foo.args');
+            });
+
+            it('adds sharedTranslationsKey to array of keys', () => {
+                lambdas.addLambdas({ translate, sharedTranslationsKey: 'foo' })(req, res);
+                res.locals.translate()(['arg1', 'arg2']);
+                translate.should.have.been.calledWithExactly(['foo.arg1', 'foo.arg2']);
             });
         });
     });
