@@ -551,6 +551,14 @@ describe('Date Mixin', () => {
 
                 errors.should.eql({});
             });
+
+            it('should not create a new error if date is not a valid format (eg if year is missing)', () => {
+                req.form.values['date1'] = '-10-22';
+
+                instance.validateDateField(req, 'date1', errors);
+
+                errors.should.eql({});
+            });
         });
     });
 
