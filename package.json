@@ -1,6 +1,6 @@
 {
   "name": "hof-template-mixins",
-  "version": "5.3.2",
+  "version": "5.3.3",
   "description": "A middleware that exposes a series of Mustache mixins on res.locals to ease usage of forms, translations, and some general needs.",
   "main": "index.js",
   "scripts": {
@@ -36,7 +36,7 @@
     "express": "^4.15.2",
     "hogan.js": "^3.0.2",
     "moment": "^2.13.0",
-    "underscore": "^1.8.3"
+    "underscore": "^1.12.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
