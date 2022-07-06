@@ -1,4 +1,7 @@
 # passports-template-mixins
+
+> **Note:** This library is now deprecated.
+
 A middleware that exposes a series of Mustache mixins on `res.locals` to ease usage of forms, translations, and some other things.
 
 It takes an optional [options object](#options) argument.
